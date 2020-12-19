@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">	
+		<link rel="stylesheet" type="text/css" href="css/style.css" />	
+		<title>Formulário de Inclusão de Professores</title>
+	</head>
+	<body>
+		<div class="div1"><h1>Formulário para inclusão de professores</h1></div>
+		<a href="/">Voltar</a>
+		<section>
+			<% if(erros) { %>
+				<ul>
+					<% for(let i = 0; i<erros.length; i++){ %>
+						<li>
+							<%= erros[i].msg %>
+						</li>
+					<% } %>
+				</ul>
+			<% } %>
+		</section>
+		<form action="/professor/salvar" method="post">
+			<input type="text" name="nome" placeholder="Digite o nome do professor" value="<%= professor.nome %>"><br>
+			<input type="text" name="titulacao" placeholder="Titulação" value="<%= professor.titulacao %>"><br>
+			<input type="submit" value="Enviar"><br>
+		</form>
+	</body>
+</html>
