@@ -23,17 +23,20 @@ module.exports = {
     },
     rotaPostoDetalhes: function (app){
         app.get('/chargeStation/:id', function(req, res){
-            res.send('rotaPostoDetalhes');
+            controllerPostos.postoDetalhes(app, req, res);
+            // res.send('rotaPostoDetalhes');
         });
     },
     rotaEditaPosto: function (app){
         app.put('/chargeStation/:id', function(req, res){
-            res.send('rotaEditaPosto');
+            controllerPostos.updatePosto(app, req, res);
+            // res.send('rotaEditaPosto');
         });
     },
     rotaDeletePosto: function (app){
         app.delete('/chargeStation/:id', function(req, res){
-            res.send('rotaDeletePosto');
+            controllerPostos.deletePosto(app, req, res);
+            // res.send('rotaDeletePosto');
         });
     },
 

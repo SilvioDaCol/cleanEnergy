@@ -32,3 +32,52 @@ module.exports.postoSalvar = function(app, req, res){
         }
     });
 }
+
+module.exports.postoDetalhes = function(app, req, res){
+    const {id} = req.params;
+    const connection = dbConnectionMY();
+    postosModel.getPosto(id, connection, function(err, results){
+        if (!err){
+            res.send({posto: results});
+        } else{
+            erro = {
+                "descricao": "Erro de conexão com o banco de dados.",
+                "conteudo": err
+            }
+            res.send({erro: erro});
+        }
+    });
+}
+
+module.exports.deletePosto = function(app, req, res){
+    const {id} = req.params; 
+    const connection = dbConnectionMY();
+    postosModel.deletePosto(id, connection, function(err, results){
+        if (!err){
+            res.send('Posto Deletado');
+        } else{
+            erro = {
+                "descricao": "Erro de conexão com o banco de dados.",
+                "conteudo": err
+            }
+            res.send({erro: erro});
+        }
+    });
+}
+
+module.exports.updatePosto = function(app, req, res){
+    const {id} = req.params;
+    const posto = req.body;
+    const connection = dbConnectionMY();
+    postosModel.updatePosto(posto, id, connection, function(err, results){
+        if (!err){
+            res.send('Posto atualizado');
+        } else{
+            erro = {
+                "descricao": "Erro de conexão com o banco de dados.",
+                "conteudo": err
+            }
+            res.send({erro: erro});
+        }
+    });
+}
