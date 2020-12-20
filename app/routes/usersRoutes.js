@@ -43,6 +43,5 @@ module.exports = {
         app.delete('/users/:userId', function(req, res){
             res.send('rotaDeleteUser');
         });
-    },
-
-
+    }
+}
