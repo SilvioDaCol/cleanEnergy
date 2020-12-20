@@ -1,12 +1,17 @@
-const {check, validationResult} = require('express-validator');
+// const {check, validationResult} = require('express-validator');
 const controllerUsers = require('../controllers/usersController')
 
 module.exports = {
 
     /******* USERS *******/
-    rotaListaUser: function (app){
-        app.get('/users/:userId', function(req, res){
-            controllerUsers.usersListar(app, req, res);
+    rotaGetUserById: function (app){
+        app.get('/users/id/:userId', function(req, res){
+            controllerUsers.getUserById(app, req, res);
+        });
+    },
+    rotaGetUserByEmail: function (app){
+        app.get('/users/email/:email', function(req, res){
+            controllerUsers.getUserByEmail(app, req, res);
         });
     },
     rotaEditaUser: function (app){

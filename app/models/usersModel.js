@@ -1,10 +1,17 @@
 module.exports = {
-    getUser: async function (userId, connection) {
+    getUserById: async function (userId, connection) {
         const {rows} = await connection.query(
             "SELECT * FROM users WHERE ID = $1",
             [userId]
         );
-        return rows
+        return rows;
+    },
+    getUserByEmail: async function (email, connection) {
+        const {rows} = await connection.query(
+            "SELECT * FROM users WHERE email like %$1%",
+            [email]
+        );
+        return rows;
     },
     updateUser: async function (userId, updateUser, connection) {
         const {name, email, password, urlImage} = updateUser;

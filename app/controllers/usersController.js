@@ -1,16 +1,30 @@
+const { name } = require('ejs');
 const dbConnectionMY = require('../../config/dbConnectionMY');
 const dbConnectionPG = require('../../config/dbConnectionPG');
 const usersModel = require('../models/usersModel');
 
-module.exports.usersListar = async (app, req, res) => {
+module.exports.getUserById = async (app, req, res) => {
   const { userId } = req.params;
-  const response = await usersModel.getUser(userId, dbConnectionPG);
+  const response = await usersModel.getUserById(userId, dbConnectionPG);
   res.status(200).send(response);
+};
+
+module.exports.getUserByEmail = async (app, req, res) => {
+  try {
+    const { email } = req.params;
+    const response = await usersModel.getUserByEmail(email, dbConnectionPG);
+    res.status(200).send(response);
+  } catch (err) {
+    console.log(err)
+  }
 };
 
 module.exports.createUser = (app, req, res) => {
   const user = req.body;
   try {
+    const checkIfUserExists = usersModel.getUserByEmail(user.email)
+
+    if(checkIfUserExists) throw new Error("usuario ja existe");
     const criarUser = usersModel.postUser(user, dbConnectionPG);
     res.status(201).send({
       message: "User criado com sucesso!",
@@ -22,11 +36,10 @@ module.exports.createUser = (app, req, res) => {
 }
 
 module.exports.updateUser = (app, req, res) => {
-  const id = req.params;
+  const userId = req.params;
   const user = req.body;
-
   try {
-    const updateUser = usersModel.updateUser(id, user, dbConnectionPG);
+    const updateUser = usersModel.updateUser(userId, user, dbConnectionPG);
     res.status(201).send({
       message: "User atualizado com sucesso!",
       updateUser
@@ -35,23 +48,3 @@ module.exports.updateUser = (app, req, res) => {
     console.log(err)
   }
 }
-// module.exports.estudantesSalvar = function(app, req, res, errors){
-//     let estudante = req.body;
-//     if (!errors.isEmpty()){
-//         let erros = errors.array();
-//         res.render('admin/insereEstudante', {erros: erros, estudante: estudante});
-//         return;
-//     }
-//     const connection = dbConnection();
-//     estudantesModel.setEstudante(estudante, connection, function(err, results){
-//         if (!err){
-//             res.redirect('/estudantes');
-//         } else{
-//             erro = {
-//                 "descricao": "Erro de conexão com o banco de dados.",
-//                 "conteudo": err
-//             }
-//             res.render('erro', {erro: erro})
-//         }
-//     });
-// }
