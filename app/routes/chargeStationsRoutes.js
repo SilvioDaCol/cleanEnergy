@@ -1,15 +1,19 @@
+const controllerPostos = require('../controllers/postosController');
+
 module.exports = {
     
     /******* CHARGESTATIONS *******/
     rotaCriaPosto: function (app){
         app.post('/chargeStation', function(req, res){
             const body = req.body;
-            res.send({'message' : body});
+            controllerPostos.postoSalvar(app, req, res);
+            // res.send({'message' : body});
         });
     },
     rotaListaPostos: function (app){
         app.get('/chargeStation', function(req, res){
-            res.send('rotaListaPostos');
+            controllerPostos.postosListar(app, req, res);
+            // res.send('rotaListaPostos');
         });
     },
     rotaPostosDestaque: function (app){
@@ -19,30 +23,34 @@ module.exports = {
     },
     rotaPostoDetalhes: function (app){
         app.get('/chargeStation/:id', function(req, res){
-            res.send('rotaPostoDetalhes');
+            controllerPostos.postoDetalhes(app, req, res);
+            // res.send('rotaPostoDetalhes');
         });
     },
     rotaEditaPosto: function (app){
         app.put('/chargeStation/:id', function(req, res){
-            res.send('rotaEditaPosto');
+            controllerPostos.updatePosto(app, req, res);
+            // res.send('rotaEditaPosto');
         });
     },
     rotaDeletePosto: function (app){
         app.delete('/chargeStation/:id', function(req, res){
-            res.send('rotaDeletePosto');
+            controllerPostos.deletePosto(app, req, res);
+            // res.send('rotaDeletePosto');
         });
     },
 
-    /******* CHARGESTATIONS *******/
-    rotaListaFeedbacks: function (app){
+    /******* CHARGESTATIONS FEEDBACKS*******/
+    rotaGetFeedbacks: function (app){
         app.get('/feedbacks/:chargeStationId', function(req, res){
-            res.send('rotaListaFeedbacks');
+            controllerPostos.getFeedback(app, req, res);
         });
     },
     rotaCriaFeedback: function (app){
         app.post('/feedbacks', function(req, res){
-            const body = req.body;
-            res.send({'message' : body});
+            controllerPostos.postFeedback(app, req, res)
+            // const body = req.body;
+            // res.send({'message' : body});
         });
     }
 }

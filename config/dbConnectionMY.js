@@ -5,6 +5,6 @@ module.exports = function(){
         host: '172.17.0.2',
         user: 'aluno_IFSP',
         password: '123456',
-        database: 'dsw'
+        database: 'cleanenergy_db'
     });
 }

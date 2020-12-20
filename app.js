@@ -17,5 +17,5 @@ chargeStationsRoutes.rotaPostosDestaque(app);
 chargeStationsRoutes.rotaPostoDetalhes(app);
 chargeStationsRoutes.rotaDeletePosto(app);
 chargeStationsRoutes.rotaEditaPosto(app);
-chargeStationsRoutes.rotaListaFeedbacks(app);
+chargeStationsRoutes.rotaGetFeedbacks(app);
 chargeStationsRoutes.rotaCriaFeedback(app);
