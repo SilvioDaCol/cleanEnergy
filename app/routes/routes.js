@@ -1,5 +1,6 @@
 // const {check, validationResult} = require('express-validator');
-// const controllerUsers = require('../controllers/usersController')
+const controllerUsers = require('../controllers/usersController');
+const controllerPostos = require('../controllers/postosController');
 
 
 module.exports = {
@@ -46,12 +47,14 @@ module.exports = {
     rotaCriaPosto: function (app){
         app.post('/chargeStation', function(req, res){
             const body = req.body;
-            res.send({'message' : body});
+            controllerPostos.postoSalvar(app, req, res);
+            // res.send({'message' : body});
         });
     },
     rotaListaPostos: function (app){
         app.get('/chargeStation', function(req, res){
-            res.send('rotaListaPostos');
+            controllerPostos.postosListar(app, req, res);
+            // res.send('rotaListaPostos');
         });
     },
     rotaPostosDestaque: function (app){

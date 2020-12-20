@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS `cleanenergy_db`.`chargeStation`(
     `nome` VARCHAR(50) NOT NULL,
     `bairro` VARCHAR(50) NOT NULL,
     `cidade` VARCHAR(50) NOT NULL,
+    `endereco` VARCHAR(100) NOT NULL,
     `cep` CHAR(9) NOT NULL,
 
     -- Coordenadas
