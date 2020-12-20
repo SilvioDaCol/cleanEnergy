@@ -1,21 +1,10 @@
 let app = require('./config/server');
-const rotas = require('./app/routes/routes');
+const usersRoute = require('./app/routes/usersRoute');
 
-// rotas.rotaEstudantes(app);
-// rotas.rotaProfessores(app);
-// rotas.rotaConteudo(app);
-// rotas.rotaInsereEstudante(app);
-// rotas.rotaEstudanteSalvar(app);
-// rotas.rotaInsereProfessor(app);
-// rotas.rotaProfessorSalvar(app);
-// rotas.rotaInsereConteudo(app);
-// rotas.rotaConteudoSalvar(app);
-
-rotas.rotaCriaUser(app);
-rotas.rotaListaUser(app);
-rotas.rotaDeleteUser(app);
-rotas.rotaEditaUser(app);
-rotas.rotaFavoritoUser(app);
-rotas.rotaListaFavoritosUser(app);
-rotas.rotaLogin(app);
-
+usersRoute.rotaCriaUser(app);
+usersRoute.rotaListaUser(app);
+usersRoute.rotaDeleteUser(app);
+usersRoute.rotaEditaUser(app);
+usersRoute.rotaFavoritoUser(app);
+usersRoute.rotaListaFavoritosUser(app);
+usersRoute.rotaLogin(app);
