@@ -21,3 +21,11 @@ CREATE TABLE IF NOT EXISTS `cleanenergy_db`.`chargeStation`(
     -- ``
     PRIMARY KEY (`idposto`)
 );
+
+CREATE TABLE IF NOT EXISTS "users"(
+	"id" SERIAL PRIMARY KEY,
+    "name" VARCHAR(100) NOT NULL,
+    "email" VARCHAR(100) NOT NULL,
+    "password" VARCHAR(50) NOT NULL,
+	"url_image" VARCHAR(100) NOT NULL
+);
