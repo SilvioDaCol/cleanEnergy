@@ -19,4 +19,18 @@ module.exports = {
         let sql = 'delete from chargeStation where idposto = ?;';
         connection.query(sql, idposto, callback);
     },
+
+    /* FEEDBACKS */
+    createFeedback: function(idposto, connection, callback){
+        let sql = 'insert into feedback (idposto) values (?);';
+        connection.query(sql, idposto, callback);
+    },
+    getFeedback: function(idposto, connection, callback){
+        let sql = 'select * from feedback where idposto = ?;';
+        connection.query(sql, idposto, callback);
+    },
+    postFeedback: function(feedback, connection, callback){
+        let sql = 'update feedback set ? where idposto = ?;';
+        connection.query(sql, [feedback, feedback.idposto], callback);
+    },
 }

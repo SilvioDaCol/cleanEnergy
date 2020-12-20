@@ -22,7 +22,12 @@ module.exports.postoSalvar = function(app, req, res){
     const connection = dbConnectionMY();
     postosModel.postPosto(posto, connection, function(err, results){
         if (!err){
-            res.send('Posto cadastrado');
+            idposto = results.insertId
+            postosModel.createFeedback(idposto, connection, function(err, results){
+                if(!err){
+                    res.send('Posto cadastrado');
+                }
+            });
         } else{
             erro = {
                 "descricao": "Erro de conexão com o banco de dados.",
@@ -72,6 +77,48 @@ module.exports.updatePosto = function(app, req, res){
     postosModel.updatePosto(posto, id, connection, function(err, results){
         if (!err){
             res.send('Posto atualizado');
+        } else{
+            erro = {
+                "descricao": "Erro de conexão com o banco de dados.",
+                "conteudo": err
+            }
+            res.send({erro: erro});
+        }
+    });
+}
+
+module.exports.getFeedback = function(app, req, res){
+    const {chargeStationId} = req.params;
+    const connection = dbConnectionMY();
+    postosModel.getFeedback(chargeStationId, connection, function(err, results){
+        if (!err){
+            res.send({feedback: results});
+        } else{
+            erro = {
+                "descricao": "Erro de conexão com o banco de dados.",
+                "conteudo": err
+            }
+            res.send({erro: erro});
+        }
+    });
+}
+
+module.exports.postFeedback = function(app, req, res){
+    const {chargeStationId, stars} = req.body;
+    const connection = dbConnectionMY();
+    postosModel.getFeedback(chargeStationId, connection, function(err, results){
+        if (!err){
+            feedback = JSON.parse(JSON.stringify(results[0]))
+            starName = "star" + stars;
+            feedback[starName] += 1;
+
+            postosModel.postFeedback(feedback, connection, function(err, result){
+                if (!err){
+                    res.send('Feedback enviado');
+                } else{
+                    res.send(err);
+                }
+            });
         } else{
             erro = {
                 "descricao": "Erro de conexão com o banco de dados.",

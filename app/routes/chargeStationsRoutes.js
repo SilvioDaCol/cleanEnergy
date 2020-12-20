@@ -41,15 +41,16 @@ module.exports = {
     },
 
     /******* CHARGESTATIONS FEEDBACKS*******/
-    rotaListaFeedbacks: function (app){
+    rotaGetFeedbacks: function (app){
         app.get('/feedbacks/:chargeStationId', function(req, res){
-            res.send('rotaListaFeedbacks');
+            controllerPostos.getFeedback(app, req, res);
         });
     },
     rotaCriaFeedback: function (app){
         app.post('/feedbacks', function(req, res){
-            const body = req.body;
-            res.send({'message' : body});
+            controllerPostos.postFeedback(app, req, res)
+            // const body = req.body;
+            // res.send({'message' : body});
         });
     }
 }

@@ -10,7 +10,9 @@ CREATE TABLE IF NOT EXISTS `cleanenergy_db`.`users`(
     `name` VARCHAR(100) NOT NULL,
     `email` VARCHAR(100) NOT NULL,
     `password` VARCHAR(50) NOT NULL,
-	`url_image` VARCHAR(100) NOT NULL
+	`url_image` VARCHAR(100) NOT NULL,
+
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `cleanenergy_db`.`chargeStation`(
@@ -18,6 +20,7 @@ CREATE TABLE IF NOT EXISTS `cleanenergy_db`.`chargeStation`(
     `nome` VARCHAR(50) NOT NULL,
     `bairro` VARCHAR(50) NOT NULL,
     `cidade` VARCHAR(50) NOT NULL,
+    `endereco` VARCHAR(100) NOT NULL,
     `cep` CHAR(9) NOT NULL,
 
     -- Coordenadas
@@ -27,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `cleanenergy_db`.`chargeStation`(
     `atendimento24` BOOLEAN NOT NULL,
     `imagem` VARCHAR(200) NOT NULL,
     `favorito` INT DEFAULT 0,
-    -- ``
+    `meanstars` INT DEFAULT 1,
     PRIMARY KEY (`idposto`)
 );
 
