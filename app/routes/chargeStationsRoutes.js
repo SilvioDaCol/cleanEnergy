@@ -1,15 +1,19 @@
+const controllerPostos = require('../controllers/postosController');
+
 module.exports = {
     
     /******* CHARGESTATIONS *******/
     rotaCriaPosto: function (app){
         app.post('/chargeStation', function(req, res){
             const body = req.body;
-            res.send({'message' : body});
+            controllerPostos.postoSalvar(app, req, res);
+            // res.send({'message' : body});
         });
     },
     rotaListaPostos: function (app){
         app.get('/chargeStation', function(req, res){
-            res.send('rotaListaPostos');
+            controllerPostos.postosListar(app, req, res);
+            // res.send('rotaListaPostos');
         });
     },
     rotaPostosDestaque: function (app){
@@ -33,7 +37,7 @@ module.exports = {
         });
     },
 
-    /******* CHARGESTATIONS *******/
+    /******* CHARGESTATIONS FEEDBACKS*******/
     rotaListaFeedbacks: function (app){
         app.get('/feedbacks/:chargeStationId', function(req, res){
             res.send('rotaListaFeedbacks');
