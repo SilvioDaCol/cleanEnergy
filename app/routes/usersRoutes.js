@@ -19,13 +19,13 @@ module.exports = {
         });
     },
     rotaFavoritoUser: function (app){
-        app.put('/users/favorites/:chargeStationId:', function(req, res){
-            res.send('rotaFavoritoUser');
+        app.put('/users/favorites/:userId/:chargeStationId', function(req, res){
+            controllerUsers.updateFavorites(app, req, res);
         });
     },
     rotaListaFavoritosUser: function (app){
         app.get('/users/favorites/:userId', function(req, res){
-            res.send('rotaListaFavoritosUser');
+            controllerUsers.getFavorites(app, req, res);
         });
     },
     rotaCriaUser: function (app){
@@ -35,13 +35,12 @@ module.exports = {
     },
     rotaLogin: function (app){
         app.post('/users/login', function(req, res){
-            console.log(req.body)
-            res.send('rotaLogin');
+            controllerUsers.login(app, req, res)
         });
     },
     rotaDeleteUser: function (app){
         app.delete('/users/:userId', function(req, res){
-            res.send('rotaDeleteUser');
+            controllerUsers.delete(app, req, res);
         });
     }
 }
