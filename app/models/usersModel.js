@@ -13,11 +13,12 @@ module.exports = {
 
         connection.query(sql, [name, email, password, urlImage, userId], callback);
     },
+
     updateFavorites: async function (userId, chargeStationId, connection, callback) {
         sql1 = "select * from users where id = ?;"
 
-        connection.query(sql1, userId, function(err, result){
-            if (err){
+        connection.query(sql1, userId, function (err, result) {
+            if (err) {
                 throw new Error(err);
             }
             let favorites;

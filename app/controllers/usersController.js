@@ -5,6 +5,7 @@ const dbConnectionPG = require('../../config/dbConnectionPG');
 const usersModel = require('../models/usersModel');
 
 module.exports.getUserById = async (app, req, res) => {
+  
   const { userId } = req.params;
   let connection = dbConnectionMY();
   usersModel.getUserById(userId, connection, function(err, result){
@@ -49,7 +50,11 @@ module.exports.getFavorites = async (app, req, res) => {
   });
 };
 
-module.exports.createUser = async (app, req, res) => {
+module.exports.createUser = async (app, req, res, errors) => {
+  if (!errors.isEmpty()) {
+    return res.status(500).json({ errors: err.array() });
+  }
+
   const user = req.body;
   let connection = dbConnectionMY();
 
@@ -73,7 +78,13 @@ module.exports.createUser = async (app, req, res) => {
   });
 }
 
-module.exports.updateUser = async (app, req, res) => {
+module.exports.updateUser = async (app, req, res, errors) => {
+
+  if (!errors.isEmpty()) {
+    return res.status(500).json({ errors: err.array() });
+  }
+
+
   const userId = req.params.userId;
   const user = req.body;
 

@@ -1,7 +1,8 @@
 module.exports = {
-    getPostos: function(connection, callback){
+    getPostos: function(connection){
         let sql = 'select * from chargeStation;';
-        connection.query(sql, callback);
+        const {results} = connection.query(sql);
+        console.log(results)
     },
     postPosto: function(posto, connection, callback){
         let sql = 'insert into chargeStation set ?;';
