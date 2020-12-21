@@ -1,70 +1,52 @@
 module.exports = {
-    getUserById: async function (userId, connection) {
-        const { rows } = await connection.query(
-            "SELECT * FROM users WHERE ID = $1",
-            [userId]
-        );
-        return rows;
+    getUserById: async function (userId, connection, callback) {
+        let sql = "SELECT * FROM users WHERE ID = ?";
+        connection.query(sql, userId, callback);
     },
-    getUserByEmail: async function (email, connection) {
-        const { rows } = await connection.query(
-            "SELECT * FROM users WHERE email = $1",
-            [email]
-        );
-        return rows;
+    getUserByEmail: async function (email, connection, callback) {
+        sql = "SELECT * FROM users WHERE email = ?"
+        connection.query(sql, email, callback);
     },
-    updateUser: async function (userId, updateUser, connection) {
+    updateUser: async function (userId, updateUser, connection, callback) {
         const { name, email, password, urlImage } = updateUser;
+        sql = "UPDATE users set name = ?, email = ?, password = ?, url_image = ?  where id = ?;";
 
-        return await connection.query(
-            "UPDATE users set name = $1, email = $2, password = $3, url_image = $4  where id = $5",
-            [name, email, password, urlImage, userId]
-        );
+        connection.query(sql, [name, email, password, urlImage, userId], callback);
     },
     updateFavorites: async function (userId, chargeStationId, connection, callback) {
+        sql1 = "select * from users where id = ?;"
 
-        const { rows } = await connection.query(
-            "select * from users where id = $1",
-            [userId]
-        )
-        let favorites;
-        if (rows[0].favorites != null) {
-            favorites = `${rows[0].favorites},${chargeStationId}`;
-        } else {
-            favorites = `${chargeStationId}`;
-        }
+        connection.query(sql1, userId, function(err, result){
+            if (err){
+                throw new Error(err);
+            }
+            let favorites;
+            if (result[0].favorites != null) {
+                favorites = `${result[0].favorites},${chargeStationId}`;
+            } else {
+                favorites = `${chargeStationId}`;
+            }
 
-        return await connection.query(
-            "UPDATE users set favorites = $1 where id = $2",
-            [favorites, userId]
-        );
+            sql2 = "UPDATE users set favorites = ? where id = ?;";
+            connection.query(sql2, [favorites, userId], callback);
+        });
     },
-    postUser: async function (user, connection) {
+    postUser: async function (user, connection, callback) {
         const { name, email, password, urlImage } = user;
-        return await connection.query(
-            "INSERT INTO users (name, email, password, url_image) VALUES ($1, $2, $3, $4)",
-            [name, email, password, urlImage]
-        );
-    },
-    getFavorite: async function (userId, connection) {
-        const {rows} = await connection.query(
-            'select id as userId, favorites from users where id = $1;',
-            [userId]
-        );
-        return rows[0];
 
+        let sql = "INSERT INTO users (name, email, password, url_image) VALUES (?, ?, ?, ?)";
+        connection.query(sql, [name, email, password, urlImage], callback);
     },
-    login: async function (email, password, connection) {
-        const { rows } = await connection.query(
-            "SELECT * from users where email = $1 and password = $2;",
-            [email, password]
-        );
-        return rows;
+    getFavorite: async function (userId, connection, callback) {
+        sql = 'select id as userId, favorites from users where id = ?;'
+        connection.query(sql, userId, callback);
     },
-    deleteUser: async function (userId, connection) {
-        return await connection.query(
-            "DELETE from users where id = $1;",
-            [userId]
-        );
+    login: async function (email, password, connection, callback) {
+        let sql = "SELECT * from users where email = ? and password = ?;"
+        connection.query(sql, [email, password], callback);
+    },
+    deleteUser: async function (userId, connection, callback) {
+        let sql = "DELETE from users where id = ?;"
+        connection.query(sql, userId, callback);
     }
 }

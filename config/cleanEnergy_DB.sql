@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `cleanenergy_db`.`users`(
     `email` VARCHAR(100) NOT NULL,
     `password` VARCHAR(50) NOT NULL,
 	`url_image` VARCHAR(100) NOT NULL,
+    `favorites` TEXT,
 
     PRIMARY KEY (`id`)
 );
