@@ -5,33 +5,49 @@ const dbConnectionPG = require('../../config/dbConnectionPG');
 const usersModel = require('../models/usersModel');
 
 module.exports.getUserById = async (app, req, res) => {
-  try {
-    const { userId } = req.params;
-    const response = await usersModel.getUserById(userId, dbConnectionPG);
-    res.status(200).send(response);
-  } catch (err) {
-    return res.status(500).json({ errors: err.array() });
-  }
+  
+  const { userId } = req.params;
+  let connection = dbConnectionMY();
+  usersModel.getUserById(userId, connection, function(err, result){
+    if (!err){
+      res.status(200).send({user: result});
+    } else{
+        erro = {
+            "descricao": "Erro de conexão com o banco de dados.",
+            "conteudo": err
+        }
+        res.send({erro: erro});
+    }
+  });
 };
 
 module.exports.getUserByEmail = async (app, req, res) => {
-  try {
-    const { email } = req.params;
-    const response = await usersModel.getUserByEmail(email, dbConnectionPG);
-    res.status(200).send(response);
-  } catch (err) {
-    return res.status(500).json({ errors: err.array() });
-  }
+  const { email } = req.params;
+  let connection = dbConnectionMY();
+  usersModel.getUserByEmail(email, connection, function(err, result){
+    if (!err){
+      res.status(200).send({user: result});
+    } else{
+        erro = {
+            "descricao": "Erro de conexão com o banco de dados.",
+            "conteudo": err
+        }
+        res.send({erro: erro});
+    }
+  });
 };
 
 module.exports.getFavorites = async (app, req, res) => {
   const { userId } = req.params;
-  try {
-    const response = await usersModel.getFavorite(userId, dbConnectionPG);
-    res.status(200).send(response);
-  } catch (err) {
-    return res.status(500).json({ errors: err.array() });
-  }
+
+  let connection = dbConnectionMY();
+  usersModel.getFavorite(userId, connection, function(err, result){
+    if (!err){
+      res.status(200).send(result);
+    } else{
+      throw new Error(err);
+    }
+  });
 };
 
 module.exports.createUser = async (app, req, res, errors) => {
@@ -40,22 +56,26 @@ module.exports.createUser = async (app, req, res, errors) => {
   }
 
   const user = req.body;
+  let connection = dbConnectionMY();
 
-  try {
-    const checkIfUserExists = await usersModel.getUserByEmail(user.email, dbConnectionPG)
-
-    if (checkIfUserExists.length > 0) {
-      throw new Error("Usuario ja existe!");
+  usersModel.getUserByEmail(user.email, connection, function(err, result){
+    if(err){
+      throw new Error(err);
+      return;
     }
 
-    const criarUser = usersModel.postUser(user, dbConnectionPG);
-    res.status(201).send({
-      message: "User criado com sucesso!",
-      criarUser
-    });
-  } catch (err) {
-    return res.status(500).json({ errors: err.array() });
-  }
+    if (result.length > 0){
+      throw new Error("Usuario ja existe!");
+    } else {
+      usersModel.postUser(user, connection, function(err, result){
+        if(err){
+          throw new Error(err);
+          return;
+        }
+        res.status(201).send("User criado com sucesso!");
+      });
+    }
+  });
 }
 
 module.exports.updateUser = async (app, req, res, errors) => {
@@ -67,76 +87,74 @@ module.exports.updateUser = async (app, req, res, errors) => {
 
   const userId = req.params.userId;
   const user = req.body;
-  try {
-    const checkIfUserExists = await usersModel.getUserById(userId, dbConnectionPG);
 
-    if (checkIfUserExists.length == 0) {
+  let connection = dbConnectionMY();
+  usersModel.getUserById(userId, connection, function(err, result){
+    if (result.length == 0) {
       throw new Error("Usuario não existe!");
     }
-    await usersModel.updateUser(userId, user, dbConnectionPG);
-    res.status(201).send({
-      message: "User atualizado com sucesso!",
-      user,
+
+    usersModel.updateUser(userId, user, connection, function(err, result){
+      if(err){
+        throw new Error(err);
+        return;
+      }
+      res.status(201).send({message: "User atualizado com sucesso!"});
     });
-  } catch (err) {
-    return res.status(500).json({ errors: err.array() });
-  }
+  });
 }
 
 module.exports.updateFavorites = async (app, req, res) => {
   const { userId, chargeStationId } = req.params;
-  try {
-    const checkIfUserExists = await usersModel.getUserById(userId, dbConnectionPG);
 
-    if (checkIfUserExists.length == 0) {
+  let connection = dbConnectionMY();
+  usersModel.getUserById(userId, connection, function(err, result){
+    if (result.length <= 0) {
       throw new Error("Usuario não existe!");
     }
-    const favorites = await usersModel.updateFavorites(userId, chargeStationId, dbConnectionPG);
-    res.status(201).send({
-      message: "Favorites atualizado com sucesso!",
-      favorites
+
+    usersModel.updateFavorites(userId, chargeStationId, connection, function(err, result){
+      res.status(201).send({
+        message: "Favorites atualizado com sucesso!",
+        result
+      });
     });
-  } catch (err) {
-    return res.status(500).json({ errors: err.array() });
-  }
+  });
 }
-module.exports.login = async (app, req, res, errors) => {
+module.exports.login = async (app, req, res) => {
 
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: err.array() });
-  };
-
+  let connection = dbConnectionMY();
   const { email, password } = req.body;
 
-  try {
-    const checkIfUserExists = await usersModel.getUserByEmail(email, dbConnectionPG);
+  await usersModel.getUserByEmail(email, connection, function (err, result) {
 
-    if (checkIfUserExists.length == 0) {
+    if (err) {
+      throw new Error(err);
+      return;
+    }
+
+    if (!result.length > 0) {
       throw new Error("Usuario não existe!");
+    } else {
+      usersModel.login(email, password, connection, function (err, result) {
+        if (err) {
+          throw new Error(err);
+          return;
+        }
+        res.status(201).send("User logado com sucesso!");
+      });
     }
-    const userLogin = await usersModel.login(email, password, dbConnectionPG);
-
-    console.log(userLogin)
-
-    if (userLogin.length == 0) {
-      throw new Error("Email ou senha não conferem! Favor tentar novamente com usuário e senha corretos.");
-    }
-
-    return res.status(200).send({
-      message: `Usuario ${email} logado com sucesso!"`,
-    });
-  } catch (err) {
-    return res.status(500).json({ errors: err.array() });
-  }
+  });
 }
 
 module.exports.delete = async (app, req, res) => {
-  try {
-    const { userId } = req.params;
-    await usersModel.deleteUser(userId, dbConnectionPG);
-    res.status(200).send({ "message": "Usuário deletado com sucesso!" });
-  } catch (err) {
-    return res.status(500).json({ errors: err.array() });
-  }
-
+  let connection = dbConnectionMY();
+  const { userId } = req.params;
+  await usersModel.deleteUser(userId, connection, function (err, result) {
+    if (err) {
+      throw new Error(err);
+      return;
+    }
+    res.status(201).send("User excluido com sucesso!");
+  });
 };
