@@ -67,7 +67,8 @@ module.exports = {
         app.post('/feedbacks', [
             check('stars').notEmpty().withMessage('O numero de Stars é obrigatório!').isLength({max: 1}).withMessage('O valor deve estar entre 1 e 5.'),
         ],function(req, res){
-            controllerPostos.postFeedback(app, req, res)
+            const erros = validationResult(req);
+            controllerPostos.postFeedback(app, req, res, erros)
         });
     }
 }
