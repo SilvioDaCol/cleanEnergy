@@ -21,7 +21,7 @@ module.exports = {
             [name, email, password, urlImage, userId]
         );
     },
-    updateFavorites: async function (userId, chargeStationId, connection, callback) {
+    updateFavorites: async function (userId, chargeStationId, connection) {
 
         const { rows } = await connection.query(
             "select * from users where id = $1",

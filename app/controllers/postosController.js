@@ -2,129 +2,132 @@ const dbConnectionMY = require('../../config/dbConnectionMY');
 const dbConnectionPG = require('../../config/dbConnectionPG');
 const postosModel = require('../models/postosModel');
 
-module.exports.postosListar = function(app, req, res){
+module.exports.postosListar = function (app, req, res) {
     let conn = dbConnectionMY();
-    postosModel.getPostos(conn, function(err, result){
-        if (!err){
-            res.send({posto: result});
-        } else{
-            erro = {
-                "descricao": "Erro de conexão com o banco de dados.",
-                "conteudo": err
-            }
-            res.send({erro: erro});
-        }
-    });
+    postosModel.getPostos(conn);
 }
 
-module.exports.postoSalvar = function(app, req, res){
+module.exports.postoSalvar = function (app, req, res, errors) {
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     let posto = req.body;
     const connection = dbConnectionMY();
-    postosModel.postPosto(posto, connection, function(err, results){
-        if (!err){
+    postosModel.postPosto(posto, connection, function (err, results) {
+        if (!err) {
             idposto = results.insertId
-            postosModel.createFeedback(idposto, connection, function(err, results){
-                if(!err){
+            postosModel.createFeedback(idposto, connection, function (err, results) {
+                if (!err) {
                     res.send('Posto cadastrado');
                 }
             });
-        } else{
+        } else {
             erro = {
                 "descricao": "Erro de conexão com o banco de dados.",
                 "conteudo": err
             }
-            res.send({erro: erro});
+            res.send({ erro: erro });
         }
     });
 }
 
-module.exports.postoDetalhes = function(app, req, res){
-    const {id} = req.params;
+module.exports.postoDetalhes = function (app, req, res) {
+    const { id } = req.params;
     const connection = dbConnectionMY();
-    postosModel.getPosto(id, connection, function(err, results){
-        if (!err){
-            res.send({posto: results});
-        } else{
+    postosModel.getPosto(id, connection, function (err, results) {
+        if (!err) {
+            res.send({ posto: results });
+        } else {
             erro = {
                 "descricao": "Erro de conexão com o banco de dados.",
                 "conteudo": err
             }
-            res.send({erro: erro});
+            res.send({ erro: erro });
         }
     });
 }
 
-module.exports.deletePosto = function(app, req, res){
-    const {id} = req.params; 
+module.exports.deletePosto = function (app, req, res) {
+    const { id } = req.params;
     const connection = dbConnectionMY();
-    postosModel.deletePosto(id, connection, function(err, results){
-        if (!err){
+    postosModel.deletePosto(id, connection, function (err, results) {
+        if (!err) {
             res.send('Posto Deletado');
-        } else{
+        } else {
             erro = {
                 "descricao": "Erro de conexão com o banco de dados.",
                 "conteudo": err
             }
-            res.send({erro: erro});
+            res.send({ erro: erro });
         }
     });
 }
 
-module.exports.updatePosto = function(app, req, res){
-    const {id} = req.params;
+module.exports.updatePosto = function (app, req, res, errors) {
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    const { id } = req.params;
     const posto = req.body;
     const connection = dbConnectionMY();
-    postosModel.updatePosto(posto, id, connection, function(err, results){
-        if (!err){
+    postosModel.updatePosto(posto, id, connection, function (err, results) {
+        if (!err) {
             res.send('Posto atualizado');
-        } else{
+        } else {
             erro = {
                 "descricao": "Erro de conexão com o banco de dados.",
                 "conteudo": err
             }
-            res.send({erro: erro});
+            res.send({ erro: erro });
         }
     });
 }
 
-module.exports.getFeedback = function(app, req, res){
-    const {chargeStationId} = req.params;
+module.exports.getFeedback = function (app, req, res) {
+    const { chargeStationId } = req.params;
     const connection = dbConnectionMY();
-    postosModel.getFeedback(chargeStationId, connection, function(err, results){
-        if (!err){
-            res.send({feedback: results});
-        } else{
+    postosModel.getFeedback(chargeStationId, connection, function (err, results) {
+        if (!err) {
+            res.send({ feedback: results });
+        } else {
             erro = {
                 "descricao": "Erro de conexão com o banco de dados.",
                 "conteudo": err
             }
-            res.send({erro: erro});
+            res.send({ erro: erro });
         }
     });
 }
 
-module.exports.postFeedback = function(app, req, res){
-    const {chargeStationId, stars} = req.body;
+module.exports.postFeedback = function (app, req, res, errors) {
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    const { chargeStationId, stars } = req.body;
     const connection = dbConnectionMY();
-    postosModel.getFeedback(chargeStationId, connection, function(err, results){
-        if (!err){
+    postosModel.getFeedback(chargeStationId, connection, function (err, results) {
+        if (!err) {
             feedback = JSON.parse(JSON.stringify(results[0]))
             starName = "star" + stars;
             feedback[starName] += 1;
 
-            postosModel.postFeedback(feedback, connection, function(err, result){
-                if (!err){
+            postosModel.postFeedback(feedback, connection, function (err, result) {
+                if (!err) {
                     res.send('Feedback enviado');
-                } else{
+                } else {
                     res.send(err);
                 }
             });
-        } else{
+        } else {
             erro = {
                 "descricao": "Erro de conexão com o banco de dados.",
                 "conteudo": err
             }
-            res.send({erro: erro});
+            res.send({ erro: erro });
         }
     });
 }

@@ -5,9 +5,13 @@ const dbConnectionPG = require('../../config/dbConnectionPG');
 const usersModel = require('../models/usersModel');
 
 module.exports.getUserById = async (app, req, res) => {
-  const { userId } = req.params;
-  const response = await usersModel.getUserById(userId, dbConnectionPG);
-  res.status(200).send(response);
+  try {
+    const { userId } = req.params;
+    const response = await usersModel.getUserById(userId, dbConnectionPG);
+    res.status(200).send(response);
+  } catch (err) {
+    return res.status(500).json({ errors: err.array() });
+  }
 };
 
 module.exports.getUserByEmail = async (app, req, res) => {
@@ -16,7 +20,7 @@ module.exports.getUserByEmail = async (app, req, res) => {
     const response = await usersModel.getUserByEmail(email, dbConnectionPG);
     res.status(200).send(response);
   } catch (err) {
-    console.log(err)
+    return res.status(500).json({ errors: err.array() });
   }
 };
 
@@ -26,11 +30,15 @@ module.exports.getFavorites = async (app, req, res) => {
     const response = await usersModel.getFavorite(userId, dbConnectionPG);
     res.status(200).send(response);
   } catch (err) {
-    console.log(err)
+    return res.status(500).json({ errors: err.array() });
   }
 };
 
-module.exports.createUser = async (app, req, res) => {
+module.exports.createUser = async (app, req, res, errors) => {
+  if (!errors.isEmpty()) {
+    return res.status(500).json({ errors: err.array() });
+  }
+
   const user = req.body;
 
   try {
@@ -46,11 +54,17 @@ module.exports.createUser = async (app, req, res) => {
       criarUser
     });
   } catch (err) {
-    console.log(err)
+    return res.status(500).json({ errors: err.array() });
   }
 }
 
-module.exports.updateUser = async (app, req, res) => {
+module.exports.updateUser = async (app, req, res, errors) => {
+
+  if (!errors.isEmpty()) {
+    return res.status(500).json({ errors: err.array() });
+  }
+
+
   const userId = req.params.userId;
   const user = req.body;
   try {
@@ -65,7 +79,7 @@ module.exports.updateUser = async (app, req, res) => {
       user,
     });
   } catch (err) {
-    console.log(err)
+    return res.status(500).json({ errors: err.array() });
   }
 }
 
@@ -83,10 +97,15 @@ module.exports.updateFavorites = async (app, req, res) => {
       favorites
     });
   } catch (err) {
-    console.log(err)
+    return res.status(500).json({ errors: err.array() });
   }
 }
-module.exports.login = async (app, req, res) => {
+module.exports.login = async (app, req, res, errors) => {
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: err.array() });
+  };
+
   const { email, password } = req.body;
 
   try {
@@ -107,12 +126,17 @@ module.exports.login = async (app, req, res) => {
       message: `Usuario ${email} logado com sucesso!"`,
     });
   } catch (err) {
-    return { err: err }
+    return res.status(500).json({ errors: err.array() });
   }
 }
 
 module.exports.delete = async (app, req, res) => {
-  const { userId } = req.params;
-  await usersModel.deleteUser(userId, dbConnectionPG);
-  res.status(200).send({ "message" : "Usuário deletado com sucesso!"});
+  try {
+    const { userId } = req.params;
+    await usersModel.deleteUser(userId, dbConnectionPG);
+    res.status(200).send({ "message": "Usuário deletado com sucesso!" });
+  } catch (err) {
+    return res.status(500).json({ errors: err.array() });
+  }
+
 };
