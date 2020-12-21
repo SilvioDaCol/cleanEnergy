@@ -76,20 +76,21 @@ module.exports.createUser = async (app, req, res) => {
 module.exports.updateUser = async (app, req, res) => {
   const userId = req.params.userId;
   const user = req.body;
-  try {
-    const checkIfUserExists = await usersModel.getUserById(userId, dbConnectionPG);
 
-    if (checkIfUserExists.length == 0) {
+  let connection = dbConnectionMY();
+  usersModel.getUserById(userId, connection, function(err, result){
+    if (result.length == 0) {
       throw new Error("Usuario não existe!");
     }
-    await usersModel.updateUser(userId, user, dbConnectionPG);
-    res.status(201).send({
-      message: "User atualizado com sucesso!",
-      user,
+
+    usersModel.updateUser(userId, user, connection, function(err, result){
+      if(err){
+        throw new Error(err);
+        return;
+      }
+      res.status(201).send({message: "User atualizado com sucesso!"});
     });
-  } catch (err) {
-    console.log(err)
-  }
+  });
 }
 
 module.exports.updateFavorites = async (app, req, res) => {
@@ -97,48 +98,52 @@ module.exports.updateFavorites = async (app, req, res) => {
 
   let connection = dbConnectionMY();
   usersModel.getUserById(userId, connection, function(err, result){
-
-  });
-
-  const checkIfUserExists = await usersModel.getUserById(userId, dbConnectionPG);
-
-  if (checkIfUserExists.length == 0) {
-    throw new Error("Usuario não existe!");
-  }
-  const favorites = await usersModel.updateFavorites(userId, chargeStationId, dbConnectionPG);
-  res.status(201).send({
-    message: "Favorites atualizado com sucesso!",
-    favorites
-  });
- 
-}
-module.exports.login = async (app, req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    const checkIfUserExists = await usersModel.getUserByEmail(email, dbConnectionPG);
-
-    if (checkIfUserExists.length == 0) {
+    if (result.length <= 0) {
       throw new Error("Usuario não existe!");
     }
-    const userLogin = await usersModel.login(email, password, dbConnectionPG);
 
-    console.log(userLogin)
+    usersModel.updateFavorites(userId, chargeStationId, connection, function(err, result){
+      res.status(201).send({
+        message: "Favorites atualizado com sucesso!",
+        result
+      });
+    });
+  });
+}
+module.exports.login = async (app, req, res) => {
 
-    if (userLogin.length == 0) {
-      throw new Error("Email ou senha não conferem! Favor tentar novamente com usuário e senha corretos.");
+  let connection = dbConnectionMY();
+  const { email, password } = req.body;
+
+  await usersModel.getUserByEmail(email, connection, function (err, result) {
+
+    if (err) {
+      throw new Error(err);
+      return;
     }
 
-    return res.status(200).send({
-      message: `Usuario ${email} logado com sucesso!"`,
-    });
-  } catch (err) {
-    return { err: err }
-  }
+    if (!result.length > 0) {
+      throw new Error("Usuario não existe!");
+    } else {
+      usersModel.login(email, password, connection, function (err, result) {
+        if (err) {
+          throw new Error(err);
+          return;
+        }
+        res.status(201).send("User logado com sucesso!");
+      });
+    }
+  });
 }
 
 module.exports.delete = async (app, req, res) => {
+  let connection = dbConnectionMY();
   const { userId } = req.params;
-  await usersModel.deleteUser(userId, dbConnectionPG);
-  res.status(200).send({ "message" : "Usuário deletado com sucesso!"});
+  await usersModel.deleteUser(userId, connection, function (err, result) {
+    if (err) {
+      throw new Error(err);
+      return;
+    }
+    res.status(201).send("User excluido com sucesso!");
+  });
 };
