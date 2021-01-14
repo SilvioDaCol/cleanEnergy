@@ -4,7 +4,17 @@ const postosModel = require('../models/postosModel');
 
 module.exports.postosListar = function (app, req, res) {
     let conn = dbConnectionMY();
-    postosModel.getPostos(conn);
+    postosModel.getPostos(conn, function (err, result){
+        if (!err) {
+            res.send(result);
+        }else {
+            erro = {
+                "descricao": "Erro de conexão com o banco de dados.",
+                "conteudo": err
+            }
+            res.send({ erro: erro });
+        }
+    });
 }
 
 module.exports.postoSalvar = function (app, req, res, errors) {
@@ -14,6 +24,7 @@ module.exports.postoSalvar = function (app, req, res, errors) {
     }
 
     let posto = req.body;
+    console.log(posto);
     const connection = dbConnectionMY();
     postosModel.postPosto(posto, connection, function (err, results) {
         if (!err) {

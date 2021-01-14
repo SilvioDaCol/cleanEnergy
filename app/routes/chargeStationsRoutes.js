@@ -11,7 +11,8 @@ module.exports = {
             check('bairro').notEmpty().withMessage('O campo bairro é obrigatório!').isLength({ max: 50 }).withMessage('Bairro não deve ser maior que 50 caracteres.'),
             check('cidade').notEmpty().withMessage('A cidade é obrigatória.').isLength({ max: 50 }).withMessage('Cidade não deve ser maior que 50 caracteres.'),
             check('CEP').notEmpty().withMessage('O CEP é obrigatório.').isLength({ max: 9, min: 9 }).withMessage('CEP deve ter 9 caracteres.'),
-            check('coordenadas').notEmpty().withMessage('As coordenadas são obrigatórias.'),
+            check('lat').notEmpty().withMessage('As coordenadas são obrigatórias.'),
+            check('long').notEmpty().withMessage('As coordenadas são obrigatórias.'),
             check('atendimento24').notEmpty().withMessage('A informação sobre atendimento24 é obrigatória.').isBoolean().withMessage('Campo atendimento24 precisa ser um boolean [true or false]'),
             check('imagem').notEmpty().withMessage('A urlImage é obrigatória.')
 

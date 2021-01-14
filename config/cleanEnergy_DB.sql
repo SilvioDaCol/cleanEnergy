@@ -64,6 +64,6 @@ CREATE TABLE IF NOT EXISTS `cleanenergy_db`.`feedback`(
 );
 
 /* === mySQL USER AND PERMISSIONS ===*/
-CREATE USER 'aluno_IFSP'@'%' IDENTIFIED BY '123456';
+CREATE USER 'aluno_IFSP'@'%' IDENTIFIED WITH mysql_native_password BY '123456';
 GRANT INSERT, SELECT, UPDATE, DELETE ON cleanenergy_db.* TO 'aluno_IFSP'@'%';
 FLUSH PRIVILEGES;
