@@ -43,7 +43,8 @@ module.exports = {
             check('bairro').notEmpty().withMessage('O campo bairro é obrigatório!').isLength({ min: 8 }).withMessage('Senha precisa ter pelo menos 8 digitos.'),
             check('cidade').notEmpty().withMessage('A cidade é obrigatória.'),
             check('CEP').notEmpty().withMessage('O CEP é obrigatório.'),
-            check('coordenadas').notEmpty().withMessage('As coordenadas são obrigatórias.'),
+            check('lat').notEmpty().withMessage('As coordenadas são obrigatórias.'),
+            check('long').notEmpty().withMessage('As coordenadas são obrigatórias.'),
             check('atendimento24').notEmpty().withMessage('A informação sobre atendimento24 é obrigatória.'),
             check('imagem').notEmpty().withMessage('A urlImage é obrigatória.')
 
