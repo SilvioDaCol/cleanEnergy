@@ -8,6 +8,15 @@ Curso: Análise e Desenvolvimento de Sistemas
 
 6º semestre 
 ```
+<hr>
+
+#### Setup e testes da API:
+1. Criar banco de dados (mySQL): **cleanenergy_db**;
+2. Rodar script cleanEnergy_DB.sql no mySQL localizado em ./config;
+3. Configurar dados de acesso ao banco em **dbConnectionMY.js**  na pasta ./config;
+4. Executar o comando ```node app.js``` 
+5. No software **Insomnia**, importar o arquivo **Insomnia_2021-01-14_v2.json** localizado na pasta ./app/assets;
+6. Executar as requisições e verificar os resultados obtidos.
 
 <hr>
 
