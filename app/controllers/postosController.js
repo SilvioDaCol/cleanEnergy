@@ -114,9 +114,10 @@ module.exports.getFeedback = function (app, req, res) {
 }
 
 module.exports.postFeedback = function (app, req, res, errors) {
-
+    console.log(errors);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        res.status(400).json({ errors: errors.array() });
+        return;
     }
     const { chargeStationId, stars } = req.body;
     const connection = dbConnectionMY();

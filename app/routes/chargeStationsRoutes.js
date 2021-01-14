@@ -67,11 +67,7 @@ module.exports = {
     },
     rotaCriaFeedback: function (app) {
         app.post('/feedbacks', [
-            check('stars').custom(stars => {
-                if (stars > 5 || stars < 1) {
-                    throw new Error('O valor deve ser entre 1 e 5');
-                }
-            }).notEmpty().withMessage('O campo start é obrigatório!')
+            check('stars').notEmpty().withMessage('O campo stars é obrigatório!').isInt({min: 1, max:5}).withMessage('O valor deve ser entre 1 e 5'),
         ], function (req, res) {
             const erros = validationResult(req);
             controllerPostos.postFeedback(app, req, res, erros)
