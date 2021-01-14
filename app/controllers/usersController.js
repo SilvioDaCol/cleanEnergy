@@ -45,14 +45,14 @@ module.exports.getFavorites = async (app, req, res) => {
     if (!err){
       res.status(200).send(result);
     } else{
-      throw new Error(err);
+      res.status(400).json(err);
     }
   });
 };
 
 module.exports.createUser = async (app, req, res, errors) => {
   if (!errors.isEmpty()) {
-    return res.status(500).json({ errors: err.array() });
+    return res.status(500).json({ errors: errors.array() });
   }
 
   const user = req.body;
@@ -60,17 +60,15 @@ module.exports.createUser = async (app, req, res, errors) => {
 
   usersModel.getUserByEmail(user.email, connection, function(err, result){
     if(err){
-      throw new Error(err);
-      return;
+      return res.status(404).json({ errors: err});
     }
 
     if (result.length > 0){
-      throw new Error("Usuario ja existe!");
+      return res.status(404).send("Usuario ja existe!");
     } else {
       usersModel.postUser(user, connection, function(err, result){
         if(err){
-          throw new Error(err);
-          return;
+          return res.status(404).json({ errors: err});
         }
         res.status(201).send("User criado com sucesso!");
       });
@@ -91,12 +89,12 @@ module.exports.updateUser = async (app, req, res, errors) => {
   let connection = dbConnectionMY();
   usersModel.getUserById(userId, connection, function(err, result){
     if (result.length == 0) {
-      throw new Error("Usuario não existe!");
+      res.status(404).send("Usuario não existe!");
     }
 
     usersModel.updateUser(userId, user, connection, function(err, result){
       if(err){
-        throw new Error(err);
+        res.status(404).json(err);
         return;
       }
       res.status(201).send({message: "User atualizado com sucesso!"});
@@ -110,35 +108,36 @@ module.exports.updateFavorites = async (app, req, res) => {
   let connection = dbConnectionMY();
   usersModel.getUserById(userId, connection, function(err, result){
     if (result.length <= 0) {
-      throw new Error("Usuario não existe!");
+      res.status(404).send("Usuario não existe!");
     }
 
     usersModel.updateFavorites(userId, chargeStationId, connection, function(err, result){
-      res.status(201).send({
-        message: "Favorites atualizado com sucesso!",
-        result
-      });
+      res.status(201).send({message: "Favorites atualizado com sucesso!"});
     });
   });
 }
-module.exports.login = async (app, req, res) => {
 
+module.exports.login = async (app, req, res) => {
   let connection = dbConnectionMY();
   const { email, password } = req.body;
 
   await usersModel.getUserByEmail(email, connection, function (err, result) {
 
     if (err) {
-      throw new Error(err);
+      res.status(404).json(err);
       return;
     }
 
     if (!result.length > 0) {
-      throw new Error("Usuario não existe!");
+      res.status(404).send("Usuario não existe!");
     } else {
       usersModel.login(email, password, connection, function (err, result) {
         if (err) {
-          throw new Error(err);
+          res.status(404).json(err);
+          return;
+        }
+        if (result.length <= 0){
+          res.status(404).send("Senha incorreta!");
           return;
         }
         res.status(201).send("User logado com sucesso!");
