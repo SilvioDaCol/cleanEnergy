@@ -18,11 +18,19 @@ module.exports = {
 
         connection.query(sql1, userId, function (err, result) {
             if (err) {
-                throw new Error(err);
+                return;
             }
             let favorites;
             if (result[0].favorites != null) {
-                favorites = `${result[0].favorites},${chargeStationId}`;
+                favorites = result[0].favorites.split(",");
+                if (favorites[0] === "") favorites = [];
+                index = favorites.indexOf(chargeStationId)
+                if (index != -1){
+                    favorites.splice(index, index+1);
+                }else{
+                    favorites.push(chargeStationId);
+                }
+                favorites = favorites.join();
             } else {
                 favorites = `${chargeStationId}`;
             }
