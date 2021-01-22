@@ -109,6 +109,7 @@ module.exports.updateFavorites = async (app, req, res) => {
   usersModel.getUserById(userId, connection, function(err, result){
     if (result.length <= 0) {
       res.status(404).send("Usuario não existe!");
+      return;
     }
 
     usersModel.updateFavorites(userId, chargeStationId, connection, function(err, result){

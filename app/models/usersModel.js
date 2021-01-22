@@ -13,7 +13,6 @@ module.exports = {
 
         connection.query(sql, [name, email, password, urlImage, userId], callback);
     },
-
     updateFavorites: async function (userId, chargeStationId, connection, callback) {
         sql1 = "select * from users where id = ?;"
 
