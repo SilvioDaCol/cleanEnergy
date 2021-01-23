@@ -20,6 +20,41 @@ Curso: Análise e Desenvolvimento de Sistemas
 
 <hr>
 
+#### Autenticação:
+**Rotas user SEM autenticação**
+```
+usersRoute.rotaLogin(app);
+```
+
+**Rotas postos SEM autenticação**
+```
+rotaListaPostos
+rotaPostosDestaque
+rotaPostoDetalhes
+```
+
+**Rotas user COM autenticação**
+```
+rotaCriaUser
+rotaGetUserById
+rotaGetUserByEmail
+rotaDeleteUser
+rotaEditaUser
+rotaFavoritoUser
+rotaListaFavoritosUser
+```
+
+**Rotas postos SEM autenticação**
+```
+rotaCriaPosto
+rotaDeletePosto
+rotaEditaPosto
+rotaGetFeedbacks
+rotaCriaFeedback
+```
+
+<hr>
+
 ## Autores:
 
 [Paulo Belucci](https://github.com/phbelucci)
