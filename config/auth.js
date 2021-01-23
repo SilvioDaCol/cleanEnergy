@@ -4,7 +4,7 @@ const secret = require('./secret');
 
 
 module.exports = (req, res, next) => {
-    const tokenHeader = req.headers.authotization;
+    const tokenHeader = req.headers.authorization;
 
     if (!tokenHeader)
         return res.status(401).send({error: 'Token não encontrado'});
