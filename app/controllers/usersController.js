@@ -1,8 +1,12 @@
 const { name } = require('ejs');
 const { Connection } = require('pg');
+const jwt = require('jsonwebtoken');
+
 const dbConnectionMY = require('../../config/dbConnectionMY');
 const dbConnectionPG = require('../../config/dbConnectionPG');
 const usersModel = require('../models/usersModel');
+const auth = require('../../config/auth');
+const secret = require('../../config/secret');
 
 module.exports.getUserById = async (app, req, res) => {
   
@@ -141,7 +145,13 @@ module.exports.login = async (app, req, res) => {
           res.status(404).send("Senha incorreta!");
           return;
         }
-        res.status(201).send("User logado com sucesso!");
+        result[0].password = undefined;
+
+        result[0].token = jwt.sign({id: result[0].id}, secret, {
+          expiresIn: 86400,
+        });
+
+        res.status(201).json(result[0]); // .send("User logado com sucesso!");
       });
     }
   });
