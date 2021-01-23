@@ -6,16 +6,17 @@ const authCheck = require('./config/auth');
 
 // Rotas user SEM autenticação
 usersRoute.rotaLogin(app);
+usersRoute.rotaCriaUser(app);
 
 // Rotas postos SEM autenticação
 chargeStationsRoutes.rotaListaPostos(app);
 chargeStationsRoutes.rotaPostosDestaque(app);
 chargeStationsRoutes.rotaPostoDetalhes(app);
 
+
 app.use(authCheck);
 
 // Rotas user COM autenticação
-usersRoute.rotaCriaUser(app);
 usersRoute.rotaGetUserById(app);
 usersRoute.rotaGetUserByEmail(app);
 usersRoute.rotaDeleteUser(app);

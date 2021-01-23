@@ -23,6 +23,7 @@ Curso: Análise e Desenvolvimento de Sistemas
 #### Autenticação:
 **Rotas user SEM autenticação**
 ```
+rotaCriaUser
 usersRoute.rotaLogin(app);
 ```
 
@@ -35,7 +36,6 @@ rotaPostoDetalhes
 
 **Rotas user COM autenticação**
 ```
-rotaCriaUser
 rotaGetUserById
 rotaGetUserByEmail
 rotaDeleteUser
