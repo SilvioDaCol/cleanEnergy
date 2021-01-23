@@ -33,4 +33,11 @@ module.exports = {
         let sql = 'update feedback set ? where idposto = ?;';
         connection.query(sql, [feedback, feedback.idposto], callback);
     },
+    calcFeedback: function(feedback, connection){
+        mean = feedback.star1 * 1 + feedback.star2 * 2 + feedback.star3 * 3 + feedback.star4 * 4 + feedback.star5 * 5; 
+        mean = Math.round(mean/(feedback.star1 + feedback.star2 + feedback.star3 + feedback.star4 + feedback.star5));
+        let sql = 'update chargeStation set meanstars = ? where idposto = ?;';
+        connection.query(sql, [mean, feedback.idposto], function(err, result){
+        });
+    },
 }

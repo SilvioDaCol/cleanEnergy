@@ -114,7 +114,6 @@ module.exports.getFeedback = function (app, req, res) {
 }
 
 module.exports.postFeedback = function (app, req, res, errors) {
-    console.log(errors);
     if (!errors.isEmpty()) {
         res.status(400).json({ errors: errors.array() });
         return;
@@ -129,6 +128,7 @@ module.exports.postFeedback = function (app, req, res, errors) {
 
             postosModel.postFeedback(feedback, connection, function (err, result) {
                 if (!err) {
+                    postosModel.calcFeedback(feedback, connection);
                     res.send('Feedback enviado');
                 } else {
                     res.send(err);
