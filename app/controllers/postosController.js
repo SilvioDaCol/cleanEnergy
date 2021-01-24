@@ -44,6 +44,27 @@ module.exports.postoSalvar = function (app, req, res, errors) {
     });
 }
 
+module.exports.postosDestaque = function (app, req, res) {
+    const connection = dbConnectionMY();
+    postosModel.getPostos(connection, function (err, result){
+        if (!err) {
+            result.sort( (chSt1, chSt2) => {
+                if ( chSt1.meanstars > chSt2.meanstars ) return -1;  
+                if ( chSt1.meanstars < chSt2.meanstars ) return 1;
+                return 0;
+            });
+            res.send(result.slice(0, 3));
+
+        }else {
+            erro = {
+                "descricao": "Erro de conexão com o banco de dados.",
+                "conteudo": err
+            }
+            res.send({ erro: erro });
+        }
+    });
+}
+
 module.exports.postoDetalhes = function (app, req, res) {
     const { id } = req.params;
     const connection = dbConnectionMY();

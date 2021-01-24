@@ -1,5 +1,5 @@
 const { check, validationResult } = require('express-validator');
-const controllerUsers = require('../controllers/usersController')
+const controllerUsers = require('../controllers/usersController');
 
 module.exports = {
 

@@ -28,7 +28,7 @@ module.exports = {
     },
     rotaPostosDestaque: function (app) {
         app.get('/chargeStation/highlights', function (req, res) {
-            res.send('rotaPostosDestaque');
+            controllerPostos.postosDestaque(app, req, res);
         });
     },
     rotaPostoDetalhes: function (app) {
