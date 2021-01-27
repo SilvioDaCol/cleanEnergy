@@ -8,10 +8,10 @@ module.exports = {
         connection.query(sql, email, callback);
     },
     updateUser: async function (userId, updateUser, connection, callback) {
-        const { name, email, password, urlImage } = updateUser;
-        sql = "UPDATE users set name = ?, email = ?, password = ?, url_image = ?  where id = ?;";
+        //const { name, email, password, urlImage } = updateUser;
+        sql = "UPDATE users set ?  where id = ?;";
 
-        connection.query(sql, [name, email, password, urlImage, userId], callback);
+        connection.query(sql, [updateUser, userId], callback);
     },
     updateFavorites: async function (userId, chargeStationId, connection, callback) {
         sql1 = "select * from users where id = ?;"

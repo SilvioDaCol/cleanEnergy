@@ -83,7 +83,7 @@ module.exports.createUser = async (app, req, res, errors) => {
 module.exports.updateUser = async (app, req, res, errors) => {
 
   if (!errors.isEmpty()) {
-    return res.status(500).json({ errors: err.array() });
+    return res.status(500).json({ errors: errors.array() });
   }
 
 
@@ -93,12 +93,13 @@ module.exports.updateUser = async (app, req, res, errors) => {
   let connection = dbConnectionMY();
   usersModel.getUserById(userId, connection, function(err, result){
     if (result.length == 0) {
-      res.status(404).send("Usuario não existe!");
+      res.status(404).send({error: "Usuario não existe!"});
     }
 
     usersModel.updateUser(userId, user, connection, function(err, result){
       if(err){
-        res.status(404).json(err);
+        console.log(err);
+        res.status(404).json({error: err});
         return;
       }
       res.status(201).send({message: "User atualizado com sucesso!"});

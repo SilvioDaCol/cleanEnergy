@@ -15,12 +15,7 @@ module.exports = {
         });
     },
     rotaEditaUser: function (app){
-        app.put('/users/:userId', [
-            check('name').notEmpty().withMessage('O nome é obrigatório!').isLength({max: 100}).withMessage('Nome não deve ser maior que 100 caracteres.'),
-            check('email').notEmpty().withMessage('O email é obrigatório!').isLength({max: 100}).withMessage('Email não deve ser maior que 100 caracteres.'),
-            check('password').notEmpty().withMessage('A senha é obrigatória!').isLength({min: 8}).withMessage('Senha precisa ter pelo menos 8 digitos.'),
-            check('urlImage').notEmpty().withMessage('A urlImage é obrigatória.')
-        ], function(req, res){
+        app.put('/users/:userId', function(req, res){
             const erros = validationResult(req);
             controllerUsers.updateUser(app, req, res, erros);
         });
